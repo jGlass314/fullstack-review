@@ -16,11 +16,12 @@ let repoSchema = mongoose.Schema({
     type: Number,
     index: true
   },
+  name: String,
   owner: {
     login: String,
-    avatar_url: String,
-    html_url: String
+    avatar_url: String
   },
+  html_url: String,
   description: String,
   created_at: Date,
   stargazers_count: {
@@ -38,11 +39,12 @@ let save = (/* TODO */repos) => {
   return Promise.all(repos.map(repo => {
     let doc = {
       id: repo.id,
+      name: repo.name,
       owner: {
         login: repo.owner.login,
-        avatar_url: repo.owner.avatar_url,
-        html_url: repo.owner.html_url
+        avatar_url: repo.owner.avatar_url
       },
+      html_url: repo.html_url,
       description: repo.description,
       created_at: repo.created_at,
       stargazers_count: repo.stargazers_count

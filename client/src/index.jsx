@@ -20,6 +20,7 @@ class App extends React.Component {
         this.setState({
           repos: getData.repos
         });
+        // console.log('after componentWillMount & setState, this.state.repos[0]:', this.state.repos[0]);
       }
     });
   }
