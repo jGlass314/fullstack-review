@@ -1,4 +1,5 @@
 const request = require('request-promise');
+const os = require('os');
 let config;
 
 let getReposByUsername = (/* TODO */username) => {
@@ -7,9 +8,9 @@ let getReposByUsername = (/* TODO */username) => {
   
   // The options object has been provided to help you out, 
   // but you'll have to fill in the URL
-  try {
+  if(os.hostname().indexOf("local") > -1) {
     config = require('../config.js');
-  } catch (e) {
+  } else {
     console.log('config.js not found');
   }
 
