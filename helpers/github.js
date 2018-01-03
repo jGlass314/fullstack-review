@@ -2,7 +2,7 @@ const request = require('request-promise');
 const os = require('os');
 let config;
 
-let getReposByUsername = (/* TODO */username) => {
+let getReposByUsername = (username) => {
   // TODO - Use the request module to request repos for a specific
   // user from the github API
   
