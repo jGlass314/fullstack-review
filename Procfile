@@ -1,2 +1,1 @@
-web: node server/index.js 
-webpack -d
+web: node server/index.js

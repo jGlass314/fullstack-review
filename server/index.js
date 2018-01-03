@@ -35,6 +35,7 @@ app.post('/repos', function (req, res) {
   })
   .catch(err => {
     // upon error, send post response 500
+    console.error('Error on Post:', err);
     res.status(500).json({ error: err });
   })
 });

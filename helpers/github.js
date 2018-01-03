@@ -10,10 +10,8 @@ let getReposByUsername = (username) => {
   // but you'll have to fill in the URL
   if(os.hostname().indexOf("local") > -1) {
     config = require('../config.js');
-  } else {
-    console.log('config.js not found');
   }
-
+  
   const token = (config && config.TOKEN ? config.TOKEN : process.env.API_KEY);
 
   let options = {

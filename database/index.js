@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
 // Use bluebird
 mongoose.Promise = require('bluebird');
-// assert.equal(query.exec().constructor, require('bluebird'));
 
 // Use q. Note that you **must** use `require('q').Promise`.
 mongoose.Promise = require('q').Promise;
-// assert.ok(query.exec() instanceof require('q').makePromise);
-mongoose.connect('mongodb://localhost/fetcher', {
+
+const mongodbUri = process.env.MONGODB_URI || 'mongodb://localhost/fetcher';
+
+mongoose.connect(mongodbUri, {
   useMongoClient: true
 });
 
