@@ -20,17 +20,24 @@ app.post('/repos', function (req, res) {
   // make call to github API.
   api.getReposByUsername(req.body.username)
   .then(repos => {
-    // upon successful response from API, send post response 201
-    res.json('Post successful');
 
+    // track inserts vs. updates
+    let responseObj = {'status':'success', 'inserts':0, 'updates':0};
     // save repo info to db
-    repos = JSON.parse(repos);
-    db.save(repos)
+    db.save(JSON.parse(repos))
       .then(responses => {
         responses.forEach(response => {
           console.log('db.save response:', response);
-          
+          if(response.lastErrorObject.updatedExisting) {
+            responseObj.updates++;
+          } else {
+            responseObj.inserts++;
+          }
         })
+      })
+      .then(() => {
+        // upon successful updates from DB, send post response 201
+        res.json(responseObj);
       })
       .catch(err => {
         console.error('Error on db.save:', err);
