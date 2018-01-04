@@ -33,8 +33,7 @@ let repoSchema = mongoose.Schema({
 
 let Repo = mongoose.model('Repo', repoSchema);
 
-let save = (/* TODO */repos) => {
-  // TODO: Your code here
+let save = (repos) => {
   // This function should save a repo or repos to
   // the MongoDB
   return Promise.all(repos.map(repo => {
@@ -50,7 +49,8 @@ let save = (/* TODO */repos) => {
       created_at: repo.created_at,
       stargazers_count: repo.stargazers_count
     };
-    return Repo.update({id: repo.id}, doc, {upsert: true});
+    // return Repo.update({id: repo.id}, doc, {upsert: true});
+    return Repo.findOneAndUpdate({id: repo.id}, doc, {upsert: true, rawResult: true});
   }));
 }
 

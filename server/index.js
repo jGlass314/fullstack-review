@@ -26,8 +26,11 @@ app.post('/repos', function (req, res) {
     // save repo info to db
     repos = JSON.parse(repos);
     db.save(repos)
-      .then(response => {
-        console.log('db.save response:', response);
+      .then(responses => {
+        responses.forEach(response => {
+          console.log('db.save response:', response);
+          
+        })
       })
       .catch(err => {
         console.error('Error on db.save:', err);
@@ -47,7 +50,7 @@ app.get('/repos', function (req, res) {
   // read from db
   db.find(25)
     .then(docs => {
-      console.log('top 25 docs in db:', docs);
+      // console.log('top 25 docs in db:', docs);
       // respond with db results
       res.json({'repos': docs});
     })
