@@ -41,9 +41,11 @@ app.post('/repos', function (req, res) {
       return api.getContributorsByContributorURL(repo.contributors_url)
         .then(contributors => {
           // save contributor info from request-promise to db
-          return db.saveContributors(JSON.parse(contributors), repo.id);
-          })
-        }))
+          if(contributors.length) {
+            return db.saveContributors(JSON.parse(contributors), repo.id);
+          }
+        })
+    }))
   })
   .then(() => {
     // upon successful updates from DB, send post response 201
