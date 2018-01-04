@@ -15,33 +15,39 @@ app.post('/repos', function (req, res) {
   // and get the repo information from the github API, then
   // save the repo information in the database
   console.log('received post body.username:', req.body.username);
-  // res.json(null);
+  let repoArray = [];
+  const responseObj = {'status':'success', 'inserts':0, 'updates':0};
 
   // make call to github API.
   api.getReposByUsername(req.body.username)
   .then(repos => {
-
+    // save repo info from request-promise to db
+    repoArray = JSON.parse(repos);
+    return db.saveRepos(repoArray);
+  })
+  .then(responses => {
     // track inserts vs. updates
-    let responseObj = {'status':'success', 'inserts':0, 'updates':0};
-    // save repo info to db
-    db.save(JSON.parse(repos))
-      .then(responses => {
-        responses.forEach(response => {
-          console.log('db.save response:', response);
-          if(response.lastErrorObject.updatedExisting) {
-            responseObj.updates++;
-          } else {
-            responseObj.inserts++;
-          }
-        })
-      })
-      .then(() => {
-        // upon successful updates from DB, send post response 201
-        res.json(responseObj);
-      })
-      .catch(err => {
-        console.error('Error on db.save:', err);
-      })
+    responses.forEach(response => {
+      // console.log('db.saveRepos response:', response);
+      if(response.lastErrorObject.updatedExisting) {
+        responseObj.updates++;
+      } else {
+        responseObj.inserts++;
+      }
+    });
+  })
+  .then(() => {
+    return Promise.all(repoArray.map(repo => {
+      return api.getContributorsByContributorURL(repo.contributors_url)
+        .then(contributors => {
+          // save contributor info from request-promise to db
+          return db.saveContributors(JSON.parse(contributors), repo.id);
+          })
+        }))
+  })
+  .then(() => {
+    // upon successful updates from DB, send post response 201
+    res.json(responseObj);
   })
   .catch(err => {
     // upon error, send post response 500
@@ -53,9 +59,8 @@ app.post('/repos', function (req, res) {
 app.get('/repos', function (req, res) {
   // TODO - your code here!
   // This route should send back the top 25 repos
-
   // read from db
-  db.find(25)
+  db.findRepos(25)
     .then(docs => {
       // console.log('top 25 docs in db:', docs);
       // respond with db results

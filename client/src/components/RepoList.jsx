@@ -15,6 +15,7 @@ const RepoList = (props) => (
                 <td>{repo.owner.login}</td>
                 <td><a href={repo.html_url}>{repo.name}</a></td>
                 <td>{repo.description}</td>
+                <td><a href={repo.html_contributors_url}>contributors</a></td>
                 {/* <td>{repo.stargazers_count}</td> */}
               </tr>
             )
